@@ -1,0 +1,22 @@
+{
+  "info": { "name": "Inventory & Order API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:3000/api" }, { "key": "token", "value": "" }, { "key": "productId", "value": "" }, { "key": "orderId", "value": "" }],
+  "item": [
+    { "name": "Auth", "item": [
+      { "name": "Register", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/auth/register", "body": { "mode": "raw", "raw": "{\n  \"name\": \"Asha Sharma\",\n  \"email\": \"asha@example.com\",\n  \"password\": \"secure-pass-123\"\n}" } } },
+      { "name": "Login", "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('token', pm.response.json().token);"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "url": "{{baseUrl}}/auth/login", "body": { "mode": "raw", "raw": "{\n  \"email\": \"asha@example.com\",\n  \"password\": \"secure-pass-123\"\n}" } } }
+    ] },
+    { "name": "Products", "item": [
+      { "name": "Create product", "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('productId', pm.response.json().product._id);"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/products", "body": { "mode": "raw", "raw": "{\n  \"name\": \"Wireless Mouse\",\n  \"description\": \"Ergonomic Bluetooth mouse\",\n  \"price\": 1299,\n  \"stockQuantity\": 10,\n  \"category\": \"electronics\"\n}" } } },
+      { "name": "List products", "request": { "method": "GET", "url": "{{baseUrl}}/products?category=electronics&inStock=true&page=1&limit=10" } },
+      { "name": "Get product", "request": { "method": "GET", "url": "{{baseUrl}}/products/{{productId}}" } },
+      { "name": "Update product", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/products/{{productId}}", "body": { "mode": "raw", "raw": "{ \"price\": 1199 }" } } },
+      { "name": "Delete product", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/products/{{productId}}" } }
+    ] },
+    { "name": "Orders", "item": [
+      { "name": "Create order", "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('orderId', pm.response.json().order._id);"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/orders", "body": { "mode": "raw", "raw": "{ \"items\": [{ \"productId\": \"{{productId}}\", \"quantity\": 2 }] }" } } },
+      { "name": "My orders", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/orders?page=1&limit=10" } },
+      { "name": "Get my order", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/orders/{{orderId}}" } }
+    ] }
+  ]
+}
