@@ -18,14 +18,44 @@ Technical assignment implementation using Node.js, Express and MongoDB/Mongoose.
 
 ## Setup
 
+Install the dependencies and create a local `.env` file from the provided example:
+
+macOS/Linux:
+
 ```bash
 cd TaskBackend
 npm install
+cp .env.example .env
+```
+
+Windows PowerShell:
+
+```powershell
+cd TaskBackend
+npm install
 Copy-Item .env.example .env
+```
+
+Open `.env` and replace the placeholder values with your actual configuration. The application loads these values at startup using `dotenv`:
+
+```dotenv
+NODE_ENV=development
+PORT=3000
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-host>/inventory_order_api
+JWT_SECRET=replace-with-a-unique-secret-at-least-32-characters
+JWT_EXPIRES_IN=7d
+CORS_ORIGIN=http://localhost:5173
+```
+
+Then start the development server:
+
+```bash
 npm run dev
 ```
 
-Set `MONGODB_URI` and a unique 32+ character `JWT_SECRET` in `.env`. For local MongoDB, start it as a single-node replica set:
+The committed `.env.example` file contains placeholders only. Keep real database credentials and secrets in `.env`; `.env` is excluded from Git by `.gitignore` and must never be committed.
+
+For local MongoDB, use `mongodb://127.0.0.1:27017/inventory_order_api?replicaSet=rs0` as `MONGODB_URI` and start it as a single-node replica set:
 
 ```bash
 mongod --replSet rs0 --dbpath ./data
